@@ -35,6 +35,25 @@ pipeline {
                 recordIssues(tools: [pyLint(name: 'bandit', pattern: 'bandit.out')])          
             }
         }
+        stage('Deploy') {
+            environment {
+                STAGE = "staging"  // Change to the appropriate environment (e.g., production)
+            }
+            steps {
+                script {
+                    sh '''
+                    # Build the application
+                    sam build --use-container
+
+                    # Validate the CloudFormation template
+                    sam validate
+
+                    # Deploy using the specified environment config
+                    sam deploy --config-env ${STAGE} --no-confirm-changeset --no-fail-on-empty-changeset
+                    '''
+                }
+            }
+        }
     }
 }
 
