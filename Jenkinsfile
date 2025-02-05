@@ -13,9 +13,26 @@ pipeline {
                     // Clone the repository and check out the specified branch
                     checkout([$class: 'GitSCM',
                         branches: [[name: "${GIT_BRANCH}"]],
-                        userRemoteConfigs: [[url: 'https://github.com/charlstown/unir-cp01-a.git']]
+                        userRemoteConfigs: [[url: "${GIT_BRANCH}"]]
                     ])
                 }
+            }
+        }
+        stage('Static Test') {
+            environment {
+                PYTHONPATH="${WORKSPACE}"
+            }
+            steps {
+                // Run flake8 with pylint
+                sh '''
+                python3 -m flake8 --format=pylint --exit-zero --output-file=result-flake8.out app
+                bandit -r . -f custom -o bandit.out --msg-template "{abspath}:{line}: [{test_id}] {msg}" || true
+                '''
+                // Publish Flake8 results (without quality gates)
+                recordIssues(tools: [flake8(pattern: 'result-flake8.out')])
+
+                // Publish Bandit security scan results (without quality gates)
+                recordIssues(tools: [pyLint(name: 'bandit', pattern: 'bandit.out')])          
             }
         }
     }
