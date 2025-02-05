@@ -25,7 +25,7 @@ pipeline {
             steps {
                 // Run flake8 with pylint
                 sh '''
-                python3 -m flake8 --format=pylint --exit-zero --output-file=result-flake8.out app
+                python3 -m flake8 --format=pylint --exit-zero --output-file=result-flake8.out src
                 bandit -r . -f custom -o bandit.out --msg-template "{abspath}:{line}: [{test_id}] {msg}" || true
                 '''
                 // Publish Flake8 results (without quality gates)
@@ -37,3 +37,8 @@ pipeline {
         }
     }
 }
+
+//Pipeline: Stage View Plugin
+//Warnings Plugin
+//Pipeline Graph View
+//Cobertura Plugin
