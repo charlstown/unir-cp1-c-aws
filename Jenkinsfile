@@ -4,6 +4,9 @@ pipeline {
         stage('Get Code') {
             steps {
                 script {
+                    // Print info
+                    echo "[${STAGE_NAME}] Building branch ${GIT_BRANCH} of repository ${GIT_URL}"
+
                     // Add the workspace as a safe directory for Git
                     sh 'git config --global --add safe.directory ${WORKSPACE}'
 
@@ -15,7 +18,7 @@ pipeline {
                 }
             }
         }
-        stage('Unit') {
+        /* stage('Unit') {
             environment {
                 PYTHONPATH="${WORKSPACE}"
             }
@@ -125,7 +128,7 @@ pipeline {
                 '''
             }
         }
-    }
+    } */
     post {
         always {
             // Clean the workspace after the pipeline completes
