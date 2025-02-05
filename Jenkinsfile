@@ -13,7 +13,7 @@ pipeline {
                     // Clone the repository and check out the specified branch
                     checkout([$class: 'GitSCM',
                         branches: [[name: "${GIT_BRANCH}"]],
-                        userRemoteConfigs: [[url: "${GIT_BRANCH}"]]
+                        userRemoteConfigs: [[url: "${GIT_URL}"]]
                     ])
                 }
             }
