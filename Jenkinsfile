@@ -37,27 +37,27 @@ pipeline {
         }
         stage('Deploy') {
             environment {
-                STAGE = "staging"  // Change to the appropriate environment (e.g., production)
+                STAGE = "staging"  // Change to the environment
+                AWS_REGION = "us-east-1"  // Ensure the region for SAM CLI
             }
             steps {
                 script {
                     sh '''
+                    # Export the region for use in AWS CLI commands
+                    export AWS_REGION=${AWS_REGION}
+                    export AWS_DEFAULT_REGION=${AWS_REGION}
+
                     # Build the application
                     sam build
 
                     # Validate the CloudFormation template
-                    sam validate
+                    sam validate --region ${AWS_REGION}
 
                     # Deploy using the specified environment config
-                    sam deploy --config-env ${STAGE} --no-confirm-changeset --no-fail-on-empty-changeset
+                    sam deploy --config-env ${STAGE} --region ${AWS_REGION} --no-confirm-changeset --no-fail-on-empty-changeset
                     '''
                 }
             }
         }
     }
 }
-
-//Pipeline: Stage View Plugin
-//Warnings Plugin
-//Pipeline Graph View
-//Cobertura Plugin
