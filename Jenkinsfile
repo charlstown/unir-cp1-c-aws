@@ -43,7 +43,7 @@ pipeline {
                 script {
                     sh '''
                     # Build the application
-                    sam build --use-container
+                    sam build
 
                     # Validate the CloudFormation template
                     sam validate
