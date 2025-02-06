@@ -37,24 +37,25 @@ pipeline {
         }
         stage('Deploy') {
             environment {
-                STAGE = "staging"  // Change to the environment
-                AWS_REGION = "us-east-1"  // Ensure the region for SAM CLI
+                STAGE = "staging"  // Change to the appropriate environment (e.g., production)
+                AWS_REGION = "us-east-1"  // Ensure the region is set for SAM CLI
             }
             steps {
                 script {
                     sh '''
-                    # Export the region for use in AWS CLI commands
-                    export AWS_REGION=${AWS_REGION}
-                    export AWS_DEFAULT_REGION=${AWS_REGION}
+                    echo "Using AWS Region: $AWS_REGION"
+                    
+                    # Debug AWS CLI to confirm credentials
+                    aws sts get-caller-identity || echo "AWS credentials not available!"
 
                     # Build the application
-                    sam build
+                    sam build --debug
 
                     # Validate the CloudFormation template
                     sam validate --region ${AWS_REGION}
 
                     # Deploy using the specified environment config
-                    sam deploy --config-env ${STAGE} --region ${AWS_REGION} --no-confirm-changeset --no-fail-on-empty-changeset
+                    sam deploy --config-env ${STAGE} --region ${AWS_REGION} --no-confirm-changeset --no-fail-on-empty-changeset --debug
                     '''
                 }
             }
