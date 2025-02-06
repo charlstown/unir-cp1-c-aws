@@ -39,14 +39,13 @@ pipeline {
             environment {
                 STAGE = "staging"  // Change to the appropriate environment (e.g., production)
                 AWS_REGION = "us-east-1"  // Ensure the region is set for SAM CLI
+                AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY')
+                AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_KEY')
             }
             steps {
                 script {
                     sh '''
                     echo "Using AWS Region: $AWS_REGION"
-                    
-                    # Debug AWS CLI to confirm credentials
-                    aws sts get-caller-identity || echo "AWS credentials not available!"
 
                     # Build the application
                     sam build --debug
