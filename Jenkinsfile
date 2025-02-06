@@ -37,27 +37,33 @@ pipeline {
         }
         stage('Deploy') {
             environment {
-                STAGE = "staging"  // Change to the appropriate environment (e.g., production)
-                AWS_REGION = "us-east-1"  // Ensure the region is set for SAM CLI
-                AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
-                AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
+                STAGE = "staging"
+                AWS_REGION = "us-east-1"
             }
             steps {
-                script {
-                    sh '''
-                    echo "Using AWS Region: $AWS_REGION"
-                    echo "Using AWS Access Key: $AWS_ACCESS_KEY_ID"
-                    echo "Using AWS Secret Key: $AWS_SECRET_ACCESS_KEY"
+                withCredentials([
+                    string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'AWS_ACCESS_KEY_ID'),
+                    string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'AWS_SECRET_ACCESS_KEY')
+                ]) {
+                    script {
+                        sh '''
+                        echo "Using AWS Region: $AWS_REGION"
+                        echo "Using AWS Access Key: $AWS_ACCESS_KEY_ID"
 
-                    # Build the application
-                    sam build --debug
+                        # Export AWS credentials
+                        export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+                        export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
 
-                    # Validate the CloudFormation template
-                    sam validate --region ${AWS_REGION}
+                        # Build the application
+                        sam build --debug
 
-                    # Deploy using the specified environment config
-                    sam deploy --config-env ${STAGE} --region ${AWS_REGION} --no-confirm-changeset --no-fail-on-empty-changeset --debug
-                    '''
+                        # Validate the CloudFormation template
+                        sam validate --region ${AWS_REGION}
+
+                        # Deploy using the specified environment config
+                        sam deploy --config-env ${STAGE} --region ${AWS_REGION} --no-confirm-changeset --no-fail-on-empty-changeset --debug
+                        '''
+                    }
                 }
             }
         }
