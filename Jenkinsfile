@@ -39,13 +39,15 @@ pipeline {
             environment {
                 STAGE = "staging"  // Change to the appropriate environment (e.g., production)
                 AWS_REGION = "us-east-1"  // Ensure the region is set for SAM CLI
-                AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY')
-                AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_KEY')
+                AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
+                AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
             }
             steps {
                 script {
                     sh '''
                     echo "Using AWS Region: $AWS_REGION"
+                    echo "Using AWS Access Key: $AWS_ACCESS_KEY_ID"
+                    echo "Using AWS Secret Key: $AWS_SECRET_ACCESS_KEY"
 
                     # Build the application
                     sam build --debug
