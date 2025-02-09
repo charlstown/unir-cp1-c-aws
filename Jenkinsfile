@@ -53,6 +53,8 @@ pipeline {
                         echo "AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN}"
 
                         # check aws identity
+                        echo "Using AWS CLI from: $(which aws)"
+                        aws --version
                         aws sts get-caller-identity
 
                         # Build the application
