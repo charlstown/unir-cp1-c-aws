@@ -51,14 +51,9 @@ pipeline {
                         echo "Using AWS Region: $AWS_REGION"
                         echo "Using AWS Access Key: $AWS_ACCESS_KEY_ID"
 
-                        # Export AWS credentials
-                        export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-                        export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-                        export AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN}
-
                         # check aws identity
                         aws sts get-caller-identity
-                        
+
                         # Build the application
                         sam build --debug
 
