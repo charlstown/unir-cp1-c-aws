@@ -56,12 +56,6 @@ pipeline {
                         export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
                         export AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN}
 
-                        # Fix permissions for Jenkins workspace and .aws-sam directory
-                        echo "Fixing permissions for .aws-sam directory"
-                        sudo chown -R jenkins:jenkins .aws-sam || true
-                        sudo chmod -R 755 .aws-sam || true
-                        sudo chmod -R 777 .aws-sam/build || true  # Ensure build directory is writable
-
                         # Build the application
                         sam build --debug
 
@@ -74,6 +68,12 @@ pipeline {
                     }
                 }
             }
+        }
+        post {
+        always {
+            // Clean the workspace after the pipeline completes
+            cleanWs()
+        }
         }
     }
 }
