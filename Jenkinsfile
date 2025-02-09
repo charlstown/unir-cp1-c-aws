@@ -41,26 +41,20 @@ pipeline {
                 AWS_REGION = "us-east-1"
             }
             steps {
-                withCredentials([
-                    string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'AWS_ACCESS_KEY_ID'),
-                    string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'AWS_SECRET_ACCESS_KEY'),
-                    string(credentialsId: 'AWS_SESSION_TOKEN', variable: 'AWS_SESSION_TOKEN')
-                    ]) {
-                    script {
-                        sh '''
-                        # check aws identity
-                        aws sts get-caller-identity
+                script {
+                    sh '''
+                    # check aws identity
+                    aws sts get-caller-identity
 
-                        # Build the application
-                        # sam build --debug
+                    # Build the application
+                    # sam build --debug
 
-                        # Validate the CloudFormation template
-                        # sam validate --region ${AWS_REGION}
+                    # Validate the CloudFormation template
+                    # sam validate --region ${AWS_REGION}
 
-                        # Deploy using the specified environment config
-                        # sam deploy --config-env ${STAGE} --region ${AWS_REGION} --no-confirm-changeset --no-fail-on-empty-changeset --debug
-                        '''
-                    }
+                    # Deploy using the specified environment config
+                    # sam deploy --config-env ${STAGE} --region ${AWS_REGION} --no-confirm-changeset --no-fail-on-empty-changeset --debug
+                    '''
                 }
             }
         }
