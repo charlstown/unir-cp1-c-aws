@@ -69,11 +69,11 @@ pipeline {
                 }
             }
         }
-        post {
+    }
+    post {
         always {
             // Clean the workspace after the pipeline completes
             cleanWs()
-        }
         }
     }
 }
