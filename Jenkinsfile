@@ -54,6 +54,7 @@ pipeline {
 
                         # check aws identity
                         echo "Using AWS CLI from: $(which aws)"
+                        ps aux | grep jenkins
                         aws --version
                         aws sts get-caller-identity
 
