@@ -53,7 +53,7 @@ pipeline {
                     sam validate --region ${AWS_REGION}
 
                     # Deploy using the specified environment config
-                    sam deploy --config-env ${STAGE} --region ${AWS_REGION} --no-confirm-changeset --no-fail-on-empty-changeset --resolve-s3 --debug
+                    sam deploy --config-env ${STAGE} --region ${AWS_REGION} --no-confirm-changeset --no-fail-on-empty-changeset --debug
                     '''
                 }
             }
