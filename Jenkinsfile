@@ -46,8 +46,9 @@ pipeline {
                     string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'AWS_SECRET_ACCESS_KEY')                ]) {
                     script {
                         sh '''
-                        echo "Using AWS Region: $AWS_REGION"
-                        echo "Using AWS Access Key: $AWS_ACCESS_KEY_ID"
+                        echo "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}"
+                        echo "AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}"
+                        echo "AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN}"
 
                         # check aws identity
                         aws sts get-caller-identity
