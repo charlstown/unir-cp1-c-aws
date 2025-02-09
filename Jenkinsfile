@@ -56,13 +56,13 @@ pipeline {
                         export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
 
                         # Build the application
-                        sam build --debug
+                        sudo sam build --debug
 
                         # Validate the CloudFormation template
-                        sam validate --region ${AWS_REGION}
+                        sudo sam validate --region ${AWS_REGION}
 
                         # Deploy using the specified environment config
-                        sam deploy --config-env ${STAGE} --region ${AWS_REGION} --no-confirm-changeset --no-fail-on-empty-changeset --debug
+                        sudo sam deploy --config-env ${STAGE} --region ${AWS_REGION} --no-confirm-changeset --no-fail-on-empty-changeset --debug
                         '''
                     }
                 }
