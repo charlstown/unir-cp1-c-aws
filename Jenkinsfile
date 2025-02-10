@@ -1,5 +1,9 @@
 pipeline {
     agent any
+    environment {
+                STAGE = "staging"
+                AWS_REGION = "us-east-1"
+            }
     stages {
         stage('Get Code') {
             steps {
@@ -36,10 +40,6 @@ pipeline {
             }
         }
         stage('Deploy') {
-            environment {
-                STAGE = "staging"
-                AWS_REGION = "us-east-1"
-            }
             steps {
                 script {
                     sh '''
@@ -63,7 +63,7 @@ pipeline {
                 PYTHONPATH="${WORKSPACE}"
             }
             steps {
-                // Get API url
+                // Get API BASE_URL
             sh '''
             # Fetch the API Gateway URL from CloudFormation stack
             API_URL=$(aws cloudformation describe-stacks \
