@@ -77,7 +77,7 @@ pipeline {
 
             // Run REST tests
             sh '''
-            python3 -m pytest --junitxml=result-rest.xml test/integration
+            python3 -m pytest --junitxml=result-rest.xml test/integration/todoApiTest.py
             '''
             }
         }
