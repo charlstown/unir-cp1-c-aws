@@ -66,13 +66,18 @@ pipeline {
                 // Get API BASE_URL
             sh '''
             # Fetch the API Gateway URL from CloudFormation stack
-            API_URL=$(aws cloudformation describe-stacks \
+            BASE_URL=$(aws cloudformation describe-stacks \
                 --stack-name todo-list-aws-${STAGE} \
                 --region ${AWS_REGION} \
                 --query "Stacks[0].Outputs[?OutputKey=='BaseUrlApi'].OutputValue" \
                 --output text)
 
-            echo "API Gateway URL: $API_URL"
+            echo "API Gateway base url: $BASE_URL"
+            '''
+
+            // Run REST tests
+            sh '''
+            python3 -m pytest --junitxml=result-rest.xml test/integration
             '''
             }
         }
