@@ -73,10 +73,7 @@ pipeline {
                 --output text)
 
             echo "API Gateway base url: $BASE_URL"
-            '''
 
-            // Run REST tests
-            sh '''
             BASE_URL=${BASE_URL} python3 -m pytest --junitxml=result-rest.xml test/integration/todoApiTest.py
             '''
             }
