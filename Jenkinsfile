@@ -66,7 +66,7 @@ pipeline {
                 // Get API BASE_URL
             sh '''
             # Fetch the API Gateway URL from CloudFormation stack
-            BASE_URL=$(aws cloudformation describe-stacks \
+            export BASE_URL=$(aws cloudformation describe-stacks \
                 --stack-name todo-list-aws-${STAGE} \
                 --region ${AWS_REGION} \
                 --query "Stacks[0].Outputs[?OutputKey=='BaseUrlApi'].OutputValue" \
