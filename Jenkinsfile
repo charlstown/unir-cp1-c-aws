@@ -63,14 +63,17 @@ pipeline {
                 PYTHONPATH="${WORKSPACE}"
             }
             steps {
-                // Retrieve the API Gateway Invoke URL from CloudFormation stack
+                // Get API url
+            sh '''
+            # Fetch the API Gateway URL from CloudFormation stack
             API_URL=$(aws cloudformation describe-stacks \
                 --stack-name todo-list-aws-${STAGE} \
                 --region ${AWS_REGION} \
                 --query "Stacks[0].Outputs[?OutputKey=='ApiGatewayInvokeURL'].OutputValue" \
                 --output text)
-            
-            echo "API Gateway Invoke URL: $API_URL"
+
+            echo "API Gateway URL: $API_URL"
+            '''
             }
         }
     }
