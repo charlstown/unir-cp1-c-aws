@@ -69,7 +69,7 @@ pipeline {
             API_URL=$(aws cloudformation describe-stacks \
                 --stack-name todo-list-aws-${STAGE} \
                 --region ${AWS_REGION} \
-                --query "Stacks[0].Outputs[?OutputKey=='ApiGatewayInvokeURL'].OutputValue" \
+                --query "Stacks[0].Outputs[?OutputKey=='BaseUrlApi'].OutputValue" \
                 --output text)
 
             echo "API Gateway URL: $API_URL"
