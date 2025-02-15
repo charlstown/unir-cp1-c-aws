@@ -98,7 +98,7 @@ pipeline {
 
                     # Ensure we are on the correct branch (create local tracking branch if needed)
                     echo "Checking out the branch..."
-                    git fetch origin ${GIT_BRANCH}  # Ensure latest remote changes
+                    git fetch origin ${GIT_BRANCH#origin/}  # Ensure latest remote changes
                     git checkout -B ${GIT_BRANCH} origin/${GIT_BRANCH}  # Create local tracking branch
 
                     # Tag the last stable commit as stable
