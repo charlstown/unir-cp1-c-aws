@@ -84,14 +84,18 @@ pipeline {
         stage('Promote') {
             environment {
                 GITHUB_TOKEN = credentials('GITHUB_TOKEN')  // Load GitHub Token
+                GITHUB_USER = credentials('GITHUB_USER')  // Load GitHub User
+                GITHUB_EMAIL = credentials('GITHUB_EMAIL')  // Load GitHub Email
             }
             steps {
                 script {
                     sh '''
+
+                    # Configuring Git
                     echo "Configuring Git"
-                    git config --global user.name "Jenkins Bot"
-                    git config --global user.email "jenkins@example.com"
-                    git remote set-url origin https://x-access-token:$GITHUB_TOKEN@github.com/user/repo.git
+                    git config --global user.name "$GITHUB_USER"
+                    git config --global user.email "$GITHUB_EMAIL"
+                    git remote set-url origin "https://x-access-token:$GITHUB_TOKEN@${GIT_URL#https://}"
 
                     // Tag the last stable commit as stable
                     git fetch --all --tags
