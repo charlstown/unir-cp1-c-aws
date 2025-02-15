@@ -86,6 +86,7 @@ pipeline {
                 GITHUB_TOKEN = credentials('GITHUB_TOKEN')  // Load GitHub Token
                 GITHUB_USER = credentials('GITHUB_USER')  // Load GitHub User
                 GITHUB_EMAIL = credentials('GITHUB_EMAIL')  // Load GitHub Email
+                TAG_NAME = "stable"
             }
             steps {
                 script {
