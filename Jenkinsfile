@@ -76,6 +76,25 @@ pipeline {
 
             BASE_URL=${BASE_URL} python3 -m pytest --junitxml=result-rest.xml test/integration/todoApiTest.py
             '''
+
+            // Publish REST test results
+            junit 'result-rest.xml'
+            }
+        }
+        stage('Promote') {
+            environment {
+                GIT_CREDENTIALS_ID = 'GIT_CREDENTIALS_ID'  // Jenkins stored GitHub credentials
+                REPO_URL = 'https://github.com/your-user/your-repo.git' // GitHub repo URL (without credentials)
+            }
+            steps {
+                script {
+                    // git merge to master
+                    sh '''
+                    git checkout master
+                    git merge ${GIT_BRANCH}
+                    git push
+                    '''
+                }
             }
         }
     }
