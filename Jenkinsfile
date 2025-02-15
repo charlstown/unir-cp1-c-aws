@@ -97,6 +97,10 @@ pipeline {
                     git config --global user.email "$GITHUB_EMAIL"
                     git remote set-url origin "https://x-access-token:$GITHUB_TOKEN@${GIT_URL#https://}"
 
+                    # Ensure we are on the correct branch
+                    echo "Checking out the branch..."
+                    git checkout ${GIT_BRANCH}
+
                     # Tag the last stable commit as stable
                     git fetch --all --tags
                     LAST_COMMIT=$(git rev-parse HEAD)
