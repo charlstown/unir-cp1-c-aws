@@ -102,11 +102,9 @@ pipeline {
                     git checkout ${GIT_BRANCH}
 
                     # Tag the last stable commit as stable
-                    git fetch --all --tags
                     LAST_COMMIT=$(git rev-parse HEAD)
-                    echo "Tagging last stable commit: $LAST_COMMIT"
-                    git tag -f $TAG_NAME $LAST_COMMIT
-                    git push origin $TAG_NAME --force
+                    git tag -f "$TAG_NAME" "$LAST_COMMIT"
+                    git push origin "$TAG_NAME" --force
 
                     # Ensure master is up to date
                     echo "Checking out master..."
