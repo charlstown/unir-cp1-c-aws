@@ -83,16 +83,35 @@ pipeline {
         }
         stage('Promote') {
             environment {
-                GIT_CREDENTIALS_ID = 'GIT_CREDENTIALS_ID'  // Jenkins stored GitHub credentials
-                REPO_URL = 'https://github.com/your-user/your-repo.git' // GitHub repo URL (without credentials)
+                GITHUB_TOKEN = credentials('GITHUB_TOKEN')  // Load GitHub Token
             }
             steps {
                 script {
-                    // git merge to master
                     sh '''
+                    echo "Configuring Git"
+                    git config --global user.name "Jenkins Bot"
+                    git config --global user.email "jenkins@example.com"
+                    git remote set-url origin https://x-access-token:$GITHUB_TOKEN@github.com/user/repo.git
+
+                    // Tag the last stable commit as stable
+                    git fetch --all --tags
+                    LAST_COMMIT=$(git rev-parse HEAD)
+                    echo "Tagging last stable commit: $LAST_COMMIT"
+                    git tag -f $TAG_NAME $LAST_COMMIT
+                    git push origin $TAG_NAME --force
+
+                    # Ensure master is up to date
+                    echo "Checking out master..."
                     git checkout master
-                    git merge ${GIT_BRANCH}
-                    git push
+                    git pull origin master
+
+                    # Merge dev into master if no new commits exist in master
+                    echo "Merging dev into master..."
+                    git merge --ff-only dev || { echo "Merge failed! No fast-forward possible."; exit 1; }
+
+                    # Push changes
+                    echo "Pushing changes to master..."
+                    git push origin master
                     '''
                 }
             }
