@@ -103,12 +103,8 @@ pipeline {
                     git tag -f "$TAG_NAME" "$LAST_COMMIT"
                     git push origin "$TAG_NAME" --force
 
-                    # Ensure master is up to date
-                    echo "Checking out master..."
-                    git checkout master
-                    git pull origin master
-
                     # Merge dev into master if no new commits exist in master
+                    git fetch origin master
                     echo "Merging ${GIT_BRANCH} into master..."
                     git merge --ff-only || { echo "Merge failed! No fast-forward possible."; exit 1; }
 
