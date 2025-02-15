@@ -96,11 +96,6 @@ pipeline {
                     git config --global user.email "$GITHUB_EMAIL"
                     git remote set-url origin "https://x-access-token:$GITHUB_TOKEN@${GIT_URL#https://}"
 
-                    # Ensure we are on the correct branch (create local tracking branch if needed)
-                    echo "Checking out the branch..."
-                    git fetch origin ${GIT_BRANCH#origin/}  # Ensure latest remote changes
-                    git checkout -B ${GIT_BRANCH} origin/${GIT_BRANCH}  # Create local tracking branch
-
                     # Tag the last stable commit as stable
                     LAST_COMMIT=$(git rev-parse HEAD)
                     echo "Tagging last stable commit: $LAST_COMMIT"
@@ -114,7 +109,7 @@ pipeline {
 
                     # Merge dev into master if no new commits exist in master
                     echo "Merging ${GIT_BRANCH} into master..."
-                    git merge --ff-only ${GIT_BRANCH} || { echo "Merge failed! No fast-forward possible."; exit 1; }
+                    git merge --ff-only || { echo "Merge failed! No fast-forward possible."; exit 1; }
 
                     # Push changes
                     echo "Pushing changes to master..."
