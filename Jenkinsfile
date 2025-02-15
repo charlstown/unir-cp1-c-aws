@@ -97,7 +97,7 @@ pipeline {
                     git config --global user.email "$GITHUB_EMAIL"
                     git remote set-url origin "https://x-access-token:$GITHUB_TOKEN@${GIT_URL#https://}"
 
-                    // Tag the last stable commit as stable
+                    # Tag the last stable commit as stable
                     git fetch --all --tags
                     LAST_COMMIT=$(git rev-parse HEAD)
                     echo "Tagging last stable commit: $LAST_COMMIT"
