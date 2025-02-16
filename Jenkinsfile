@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-                STAGE = "staging"
+                STAGE = "production"
                 AWS_REGION = "us-east-1"
             }
     stages {
@@ -20,23 +20,6 @@ pipeline {
                         userRemoteConfigs: [[url: "${GIT_URL}"]]
                     ])
                 }
-            }
-        }
-        stage('Static Test') {
-            environment {
-                PYTHONPATH="${WORKSPACE}"
-            }
-            steps {
-                // Run flake8 with pylint
-                sh '''
-                python3 -m flake8 --format=pylint --exit-zero --output-file=result-flake8.out src
-                bandit -r . -f custom -o bandit.out --msg-template "{abspath}:{line}: [{test_id}] {msg}" || true
-                '''
-                // Publish Flake8 results (without quality gates)
-                recordIssues(tools: [flake8(pattern: 'result-flake8.out')])
-
-                // Publish Bandit security scan results (without quality gates)
-                recordIssues(tools: [pyLint(name: 'bandit', pattern: 'bandit.out')])          
             }
         }
         stage('Deploy') {
