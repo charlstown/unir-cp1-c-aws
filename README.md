@@ -9,7 +9,6 @@ Before making any changes, ensure your environment is properly configured by run
 bash setup.sh
 ```
 
-
 ## Estructura
 
 A continuación se describe la estructura del proyecto:
