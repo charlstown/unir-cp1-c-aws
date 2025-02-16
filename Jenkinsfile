@@ -91,11 +91,12 @@ pipeline {
             steps {
                 script {
                     sh '''
-                    # Configuring Git
+                    # Configuring Git & adding merge rule for ours
                     echo "Configuring Git"
                     git config --global user.name "$GITHUB_USER"
                     git config --global user.email "$GITHUB_EMAIL"
                     git remote set-url origin "https://x-access-token:$GITHUB_TOKEN@${GIT_URL#https://}"
+                    git config --global merge.ours.driver true
 
                     # Tag the last stable commit as stable
                     LAST_COMMIT=$(git rev-parse HEAD)
