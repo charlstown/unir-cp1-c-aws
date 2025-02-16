@@ -19,6 +19,9 @@ pipeline {
                         branches: [[name: "${GIT_BRANCH}"]],
                         userRemoteConfigs: [[url: "${GIT_URL}"]]
                     ])
+
+                    // Run setup
+                    sh 'bash setup.sh'
                 }
             }
         }
@@ -96,7 +99,6 @@ pipeline {
                     git config --global user.name "$GITHUB_USER"
                     git config --global user.email "$GITHUB_EMAIL"
                     git remote set-url origin "https://x-access-token:$GITHUB_TOKEN@${GIT_URL#https://}"
-                    git config --global merge.ours.driver true
 
                     # Tag the last stable commit as stable
                     LAST_COMMIT=$(git rev-parse HEAD)
