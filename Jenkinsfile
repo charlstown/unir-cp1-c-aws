@@ -57,47 +57,11 @@ pipeline {
 
             echo "API Gateway base url: $BASE_URL"
 
-            BASE_URL=${BASE_URL} python3 -m pytest --junitxml=result-rest.xml test/integration/todoApiTest.py
+            BASE_URL=${BASE_URL} python3 -m pytest -m read --junitxml=result-rest.xml test/integration/todoApiTest.py
             '''
 
             // Publish REST test results
             junit 'result-rest.xml'
-            }
-        }
-        stage('Promote') {
-            environment {
-                GITHUB_TOKEN = credentials('GITHUB_TOKEN')  // Load GitHub Token
-                GITHUB_USER = credentials('GITHUB_USER')  // Load GitHub User
-                GITHUB_EMAIL = credentials('GITHUB_EMAIL')  // Load GitHub Email
-                TAG_NAME = "stable"
-            }
-            steps {
-                script {
-                    sh '''
-                    # Configuring Git & adding merge rule for ours
-                    echo "Configuring Git"
-                    git config --global user.name "$GITHUB_USER"
-                    git config --global user.email "$GITHUB_EMAIL"
-                    git remote set-url origin "https://x-access-token:$GITHUB_TOKEN@${GIT_URL#https://}"
-                    git config --global merge.ours.driver true
-
-                    # Tag the last stable commit as stable
-                    LAST_COMMIT=$(git rev-parse HEAD)
-                    echo "Tagging last stable commit: $LAST_COMMIT"
-                    git tag -f "$TAG_NAME" "$LAST_COMMIT"
-                    git push origin "$TAG_NAME" --force
-
-                    # Merge dev into master if no new commits exist in master
-                    git fetch origin master
-                    git checkout master || git checkout -b master origin/master
-                    echo "Merging ${GIT_BRANCH} into master..."
-                    git merge --ff-only ${GIT_BRANCH} || { echo "Merge failed! No fast-forward possible."; exit 1; }
-
-                    # Push changes
-                    echo "Pushing changes to master..."
-                    git push origin master
-                    '''
-                }
             }
         }
     }
