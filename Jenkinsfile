@@ -121,6 +121,10 @@ pipeline {
         }
     }
     post {
+        success {
+            // Run continuous deployment pipeline
+            build job: 'cp1-4-cd', wait: false
+        }
         always {
             // Clean the workspace after the pipeline completes
             cleanWs()
