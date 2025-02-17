@@ -10,6 +10,7 @@ pipeline {
                 script {
                     // Print info
                     echo "[${STAGE_NAME}] Building branch ${GIT_BRANCH} of repository ${GIT_URL}"
+                    sh 'echo "User: $(whoami), IP: $(hostname -I)"'
 
                     // Add the workspace as a safe directory for Git
                     sh 'git config --global --add safe.directory ${WORKSPACE}'
@@ -33,6 +34,7 @@ pipeline {
                 AWS_REGION = "us-east-1"
             }
             steps {
+                sh 'echo "User: $(whoami), IP: $(hostname -I)"'
                 // Run flake8 with pylint
                 sh '''
                 python3 -m flake8 --format=pylint --exit-zero --output-file=result-flake8.out src
@@ -48,6 +50,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
+                    sh 'echo "User: $(whoami), IP: $(hostname -I)"'
                     sh '''
                     # check aws identity
                     aws sts get-caller-identity
@@ -72,6 +75,7 @@ pipeline {
                 AWS_REGION = "us-east-1"
             }
             steps {
+                sh 'echo "User: $(whoami), IP: $(hostname -I)"'
                 // Get API BASE_URL
                 sh '''
                 # Fetch the API Gateway URL from CloudFormation stack
@@ -101,6 +105,7 @@ pipeline {
             }
             steps {
                 script {
+                    sh 'echo "User: $(whoami), IP: $(hostname -I)"'
                     sh '''
                     # Configuring Git & adding merge rule for ours
                     echo "Configuring Git"
