@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        STAGE = "staging"
+        STAGE = "production"
         AWS_REGION = "us-east-1"
     }
     stages {
@@ -10,6 +10,7 @@ pipeline {
                 script {
                     // Print info
                     echo "[${STAGE_NAME}] Building branch ${GIT_BRANCH} of repository ${GIT_URL}"
+                    sh 'echo "User: $(whoami), IP: $(hostname -I)"'
 
                     // Add the workspace as a safe directory for Git
                     sh 'git config --global --add safe.directory ${WORKSPACE}'
@@ -28,6 +29,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
+                    sh 'echo "User: $(whoami), IP: $(hostname -I)"'
                     sh '''
                     # check aws identity
                     aws sts get-caller-identity
@@ -52,6 +54,7 @@ pipeline {
                 AWS_REGION = "us-east-1"
             }
             steps {
+                sh 'echo "User: $(whoami), IP: $(hostname -I)"'
                 // Get API BASE_URL
                 sh '''
                 # Fetch the API Gateway URL from CloudFormation stack
@@ -63,7 +66,7 @@ pipeline {
 
                 echo "API Gateway base url: $BASE_URL"
 
-                BASE_URL=${BASE_URL} python3 -m pytest --junitxml=result-rest.xml test/integration/todoApiTest.py
+                BASE_URL=${BASE_URL} python3 -m pytest -m read --junitxml=result-rest.xml test/integration/todoApiTest.py
                 '''
 
                 // Publish REST test results
