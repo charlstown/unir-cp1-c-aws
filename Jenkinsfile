@@ -20,6 +20,20 @@ pipeline {
                         userRemoteConfigs: [[url: "${GIT_URL}"]]
                     ])
 
+                    // Clone the configuration repository and copy the correct samconfig.toml
+                    sh '''
+                    echo "Fetching samconfig.toml from unir-cp1-c-sam-config (${STAGE} branch)..."
+                    git clone --depth 1 --branch ${STAGE} https://github.com/charlstown/unir-cp1-c-sam-config.git config_repo
+
+                    # Move the config file to the expected location
+                    mv config_repo/samconfig.toml .
+
+                    # Clean up the temporary repo
+                    rm -rf config_repo
+
+                    echo "samconfig.toml successfully fetched for ${STAGE} environment."
+                    '''
+
                     // Run setup
                     sh 'bash setup.sh'
                 }
@@ -55,8 +69,8 @@ pipeline {
                     # Validate the CloudFormation template
                     sam validate --region ${AWS_REGION}
 
-                    # Deploy using the specified environment config
-                    sam deploy --config-env ${STAGE} --region ${AWS_REGION} --no-confirm-changeset --no-fail-on-empty-changeset --debug
+                    # Deploy using the downloaded samconfig.toml
+                    sam deploy --region ${AWS_REGION} --no-confirm-changeset --no-fail-on-empty-changeset --debug
                     '''
                 }
             }
