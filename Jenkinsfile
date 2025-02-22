@@ -23,13 +23,7 @@ pipeline {
                     // Clone the configuration repository and copy the correct samconfig.toml
                     sh '''
                     echo "Fetching samconfig.toml from unir-cp1-c-sam-config (${STAGE} branch)..."
-                    git clone --depth 1 --branch ${STAGE} https://github.com/charlstown/unir-cp1-c-sam-config.git config_repo
-
-                    # Move the config file to the expected location
-                    mv config_repo/samconfig.toml .
-
-                    # Clean up the temporary repo
-                    rm -rf config_repo
+                    wget https://raw.githubusercontent.com/charlstown/unir-cp1-c-sam-config/${STAGE}/samconfig.toml -O samconfig.toml
 
                     echo "samconfig.toml successfully fetched for ${STAGE} environment."
                     '''
