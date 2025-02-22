@@ -124,7 +124,7 @@ pipeline {
                     git fetch origin master
                     git checkout master || git checkout -b master origin/master
                     echo "Merging ${GIT_BRANCH} into master..."
-                    git merge ${GIT_BRANCH} || { echo "Merge failed! No fast-forward possible."; exit 1; }
+                    git merge origin/${GIT_BRANCH} || { echo "Merge failed! No fast-forward possible."; exit 1; }
 
                     # Push changes
                     echo "Pushing changes to master..."
